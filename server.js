@@ -4,12 +4,14 @@ import morgan from 'morgan';
 import dotenv from 'dotenv';
 import colors from 'colors';
 import connectDb from './config/db.js';
+import syncDb from './config/syncTables.js';
 import userRoutes from './routes/userRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
 import doctorRoutes from './routes/doctorRoutes.js';
 // import testRoutes from './routes/testRoutes.js';
 dotenv.config(); // Ensure environment variables are loaded
 connectDb(); // Connect to MongoDB
+syncDb();
 const app = express();
 const port = 3000;
 

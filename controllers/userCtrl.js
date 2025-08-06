@@ -1,4 +1,4 @@
-import userModel from "../models/userModels.js";
+
 import User from "../models/userModels.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
@@ -9,7 +9,7 @@ import { registerSchema } from "../Validators/UserValidator.js";
 //register callback
 
 const registerController = async (req, res) => {
-  try {
+  try { 
     const {id,firstName,lastName,email,password,role,isAdmin, isDoctor}=req.body
     const { error } = registerSchema.validate(req.body);
     if (error) {
@@ -18,7 +18,7 @@ const registerController = async (req, res) => {
         message: error.details[0].message,
       });
     }
-    const exisitingUser = await Project.findOne({ where: { email: email } });//await userModel.findOne({ email: req.body.email });
+    const exisitingUser = await User.findOne({ where: { email: email } });//await User.findOne({ email: req.body.email });
     if (exisitingUser) {
       return res
         .status(200)
@@ -26,10 +26,10 @@ const registerController = async (req, res) => {
     }
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
-    password = hashedPassword;
-    const newUser = new userModel(req.body);
-    await newUser.save();
-    res.status(201).send({ message: "Register Sucessfully", success: true });
+    // password = hashedPassword;
+    const new_user = await User.create({ firstName,lastName,email,password:hashedPassword,role,isAdmin,isDoctor });
+    new_user.password=null;
+    res.status(201).send({ message: "Register Sucessfully", success: true,user:new_user });
   } catch (error) {
     console.log(error);
     res.status(500).send({
@@ -42,7 +42,7 @@ const registerController = async (req, res) => {
 // login callback
 const loginController = async (req, res) => {
   try {
-    const user = await userModel.findOne({ email: req.body.email });
+    const user = await User.findOne({ email: req.body.email });
     if (!user) {
       return res
         .status(200)
@@ -66,7 +66,7 @@ const loginController = async (req, res) => {
 
 const authController = async (req, res) => {
   try {
-    const user = await userModel.findById({ _id: req.body.userId });
+    const user = await User.findById({ _id: req.body.userId });
     user.password = undefined;
     if (!user) {
       return res.status(200).send({
@@ -94,7 +94,7 @@ const applyDoctorController = async (req, res) => {
   try {
     const newDoctor = await doctorModel({ ...req.body, status: "pending" });
     await newDoctor.save();
-    const adminUser = await userModel.findOne({ isAdmin: true });
+    const adminUser = await User.findOne({ isAdmin: true });
     const notifcation = adminUser.notifcation;
     notifcation.push({
       type: "apply-doctor-request",
@@ -105,7 +105,7 @@ const applyDoctorController = async (req, res) => {
         onClickPath: "/admin/docotrs",
       },
     });
-    await userModel.findByIdAndUpdate(adminUser._id, { notifcation });
+    await User.findByIdAndUpdate(adminUser._id, { notifcation });
     res.status(201).send({
       success: true,
       message: "Doctor Account Applied SUccessfully",
@@ -123,7 +123,7 @@ const applyDoctorController = async (req, res) => {
 //notification ctrl
 const getAllNotificationController = async (req, res) => {
   try {
-    const user = await userModel.findOne({ _id: req.body.userId });
+    const user = await User.findOne({ _id: req.body.userId });
     const seennotification = user.seennotification;
     const notifcation = user.notifcation;
     seennotification.push(...notifcation);
@@ -148,7 +148,7 @@ const getAllNotificationController = async (req, res) => {
 // delete notifications
 const deleteAllNotificationController = async (req, res) => {
   try {
-    const user = await userModel.findOne({ _id: req.body.userId });
+    const user = await User.findOne({ _id: req.body.userId });
     user.notifcation = [];
     user.seennotification = [];
     const updatedUser = await user.save();
@@ -195,7 +195,7 @@ const bookeAppointmnetController = async (req, res) => {
     req.body.status = "pending";
     const newAppointment = new appointmentModel(req.body);
     await newAppointment.save();
-    const user = await userModel.findOne({ _id: req.body.doctorInfo.userId });
+    const user = await User.findOne({ _id: req.body.doctorInfo.userId });
     user.notifcation.push({
       type: "New-appointment-request",
       message: `A nEw Appointment Request from ${req.body.userInfo.name}`,

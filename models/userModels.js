@@ -1,10 +1,12 @@
 import { Sequelize, DataTypes } from 'sequelize';
 import { sequelize } from '../config/db.js';
+import { v4 as uuidv4 } from 'uuid';
+
 const User = sequelize.define('User', {
   id: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.UUID,
+    defaultValue: DataTypes.UUIDV4, // OR: () => uuidv4(),
     primaryKey: true,
-    autoIncrement: true,
   },
   firstName: {
     type: DataTypes.STRING,
@@ -53,3 +55,6 @@ const User = sequelize.define('User', {
 
 export default User;
 
+// const userModel = mongoose.model("users", userSchema);
+
+// export default userModel;

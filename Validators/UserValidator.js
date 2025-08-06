@@ -1,7 +1,11 @@
 import Joi from 'joi'
 
 const registerSchema = Joi.object({
-  name: Joi.string().required().messages({
+  firstName: Joi.string().required().messages({
+    'string.empty': 'Name is required',
+    'string.email': 'Invalid Name format',
+  }),
+  lastName: Joi.string().required().messages({
     'string.empty': 'Name is required',
     'string.email': 'Invalid Name format',
   }),
@@ -19,4 +23,4 @@ const registerSchema = Joi.object({
 });
 
 
-export {registerSchema}
+export { registerSchema }
