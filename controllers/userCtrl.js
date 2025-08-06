@@ -1,32 +1,16 @@
 import userModel from "../models/userModels.js";
+import User from "../models/userModels.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import doctorModel from "../models/doctorModel.js";
 import appointmentModel from "../models/appointmentModel.js";
 import moment from "moment";
-import express from 'express';
-import Joi from 'joi'
+import { registerSchema } from "../Validators/UserValidator.js";
 //register callback
-const registerSchema = Joi.object({
 
-  name: Joi.string().required().messages({
-    'string.empty': 'Name is required',
-    'string.email': 'Invalid Name format',
-  }),
-  email: Joi.string().email().required().messages({
-    'string.empty': 'Email is required',
-    'string.email': 'Invalid email format',
-  }),
-  password: Joi.string().min(6).max(24).required().messages({
-    'string.empty': 'Password is required',
-    'string.min': 'Password should be at least 6 characters long',
-  }), tlds: { allow: ['com', 'net'] },
-  isAdmin: Joi.boolean(),
-  isDoctor: Joi.boolean()
-
-});
 const registerController = async (req, res) => {
   try {
+    const {id,firstName,lastName,email,password,role,isAdmin, isDoctor}=req.body
     const { error } = registerSchema.validate(req.body);
     if (error) {
       return res.status(400).send({
@@ -34,22 +18,15 @@ const registerController = async (req, res) => {
         message: error.details[0].message,
       });
     }
-    // if (!req.body.email || !req.body.password) {
-    //   return res.status(400).send({
-    //     message: "Email and Password are required",
-    //     success: false,
-    //   });
-    // }
-    const exisitingUser = await userModel.findOne({ email: req.body.email });
+    const exisitingUser = await Project.findOne({ where: { email: email } });//await userModel.findOne({ email: req.body.email });
     if (exisitingUser) {
       return res
         .status(200)
         .send({ message: "User Already Exist", success: false });
     }
-    const password = req.body.password;
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
-    req.body.password = hashedPassword;
+    password = hashedPassword;
     const newUser = new userModel(req.body);
     await newUser.save();
     res.status(201).send({ message: "Register Sucessfully", success: true });
