@@ -10,7 +10,7 @@ import { registerSchema } from "../Validators/UserValidator.js";
 
 const registerController = async (req, res) => {
   try { 
-    const {id,firstName,lastName,email,password,role,isAdmin, isDoctor}=req.body
+    const {firstName,lastName,email,password,role,isAdmin, isDoctor}=req.body
     const { error } = registerSchema.validate(req.body);
     if (error) {
       return res.status(400).send({
@@ -42,22 +42,27 @@ const registerController = async (req, res) => {
 // login callback
 const loginController = async (req, res) => {
   try {
-    const user = await User.findOne({ email: req.body.email });
+    const {email,password}=req.body
+    console.log(req,'--00')
+    const user = await User.findOne({ email: email});
     if (!user) {
       return res
         .status(200)
         .send({ message: "user not found", success: false });
     }
-    const isMatch = await bcrypt.compare(req.body.password, user.password);
+    const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res
         .status(200)
         .send({ message: "Invlid Email or Password", success: false });
     }
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
       expiresIn: "1d",
     });
-    res.status(200).send({ message: "Login Success", success: true, token });
+    const refreshToken = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
+      expiresIn: "7d",
+    });
+    res.status(200).send({ message: "Login Success", success: true,token: token,refreshToken:refreshToken });
   } catch (error) {
     console.log(error);
     res.status(500).send({ message: `Error in Login CTRL ${error.message}` });
@@ -66,7 +71,8 @@ const loginController = async (req, res) => {
 
 const authController = async (req, res) => {
   try {
-    const user = await User.findById({ _id: req.body.userId });
+    // const user = await User.findById({ _id:  });
+    const user = await User.findOne({ id: req.params.id});
     user.password = undefined;
     if (!user) {
       return res.status(200).send({
