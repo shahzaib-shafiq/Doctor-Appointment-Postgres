@@ -1,37 +1,55 @@
-import mongoose from "mongoose";
-
-
-const userSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: [true, "name is require"],
+import { Sequelize, DataTypes } from 'sequelize';
+import { sequelize } from '../config/db.js';
+const User = sequelize.define('User', {
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true,
+  },
+  firstName: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  lastName: {
+    type: DataTypes.STRING,
+    allowNull: false,
   },
   email: {
-    type: String,
-    required: [true, "email is require"],
+    type: DataTypes.STRING,
+    unique: true,
+    allowNull: false,
+    validate: {
+      isEmail: true,
+    },
   },
   password: {
-    type: String,
-    required: [true, "password is require"],
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  role: {
+    type: DataTypes.ENUM('user', 'admin'),
+    defaultValue: 'user',
   },
   isAdmin: {
-    type: Boolean,
-    default: false,
+    type: DataTypes.BOOLEAN,
+    defaultValue: false,
   },
   isDoctor: {
-    type: Boolean,
-    default: false,
+    type: DataTypes.BOOLEAN,
+    defaultValue: false,
   },
-  notifcation: {
-    type: Array,
-    default: [],
+  notification: {
+    type: DataTypes.JSONB,
+    defaultValue: [],
   },
   seennotification: {
-    type: Array,
-    default: [],
+    type: DataTypes.JSONB,
+    defaultValue: [],
   },
+}, {
+  timestamps: true, // adds createdAt and updatedAt
+  tableName: 'users', // explicit table name
 });
 
-const userModel = mongoose.model("users", userSchema);
+export default User;
 
-export default userModel;
