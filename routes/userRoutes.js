@@ -2,7 +2,8 @@ import express from "express";
 import {
   loginController,
   registerController,
-  authController,
+  getSingleUserController,
+  getAllUserController,
   applyDoctorController,
   getAllNotificationController,
   deleteAllNotificationController,
@@ -23,8 +24,15 @@ router.post("/login", loginController);
 //REGISTER || POST
 router.post("/register", registerController);
 
-//Auth || POST
-router.post("/getUserData/:id",authMiddleware,authController);
+//GET SINGLE USER ||GET
+
+router.get("/:id",authMiddleware,getSingleUserController);
+
+//GET SINGLE USER ||GET
+
+router.get("/getUser",authMiddleware,getAllUserController);
+
+
 
 //APply Doctor || POST
 router.post("/apply-doctor", authMiddleware, applyDoctorController);

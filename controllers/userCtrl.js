@@ -43,7 +43,6 @@ const registerController = async (req, res) => {
 const loginController = async (req, res) => {
   try {
     const {email,password}=req.body
-    console.log(req,'--00')
     const user = await User.findOne({ email: email});
     if (!user) {
       return res
@@ -69,17 +68,16 @@ const loginController = async (req, res) => {
   }
 };
 
-const authController = async (req, res) => {
+const getSingleUserController = async (req, res) => {
   try {
-    // const user = await User.findById({ _id:  });
-    const user = await User.findOne({ id: req.params.id});
-    user.password = undefined;
+    const user = await User.findOne({where:{id: req.params.id}});
     if (!user) {
       return res.status(200).send({
         message: "user not found",
         success: false,
       });
     } else {
+      user.password = undefined;
       res.status(200).send({
         success: true,
         data: user,
@@ -94,6 +92,31 @@ const authController = async (req, res) => {
     });
   }
 };
+const getAllUserController = async (req, res) => {
+  try {
+    const users = await User.findAll();
+    if (users.length === 0) {
+      return res.status(200).send({
+        success: false,
+        message: "No users found",
+        data: [],
+      });
+    }
+
+    res.status(200).send({
+      success: true,
+      message: "Users fetched successfully",
+      data: users,
+    });
+  } catch (error) {
+    console.error("Error fetching users:", error.message);
+    res.status(500).send({
+      success: false,
+      message: "Server error while fetching users",
+    });
+  }
+};
+
 
 // APpply DOctor CTRL
 const applyDoctorController = async (req, res) => {
@@ -283,7 +306,8 @@ const userAppointmentsController = async (req, res) => {
 export {
   loginController,
   registerController,
-  authController,
+  getSingleUserController,
+  getAllUserController,
   applyDoctorController,
   getAllNotificationController,
   deleteAllNotificationController,
