@@ -3,14 +3,13 @@ import {
   loginController,
   registerController,
   getSingleUserController,
-  getAllUsersController,
-  applyDoctorController,
-  getAllNotificationController,
-  deleteAllNotificationController,
-  getAllDocotrsController,
-  bookeAppointmnetController,
-  bookingAvailabilityController,
-  userAppointmentsController,
+  // applyDoctorController,
+  // getAllNotificationController,
+  // deleteAllNotificationController,
+  // getAllDocotrsController,
+  // bookeAppointmnetController,
+  // bookingAvailabilityController,
+  // userAppointmentsController,
 } from "../controllers/userCtrl.js";
 import authMiddleware from "../middlewares/authMiddleware.js";
 
@@ -28,42 +27,36 @@ router.post("/register", registerController);
 
 router.get("/:id",authMiddleware,getSingleUserController);
 
-//GET SINGLE USER ||GET
+// //APply Doctor || POST
+// router.post("/apply-doctor", authMiddleware, applyDoctorController);
 
-router.get("/getAllUser",authMiddleware,getAllUsersController);
+// //Notifiaction  Doctor || POST
+// router.post(
+//   "/get-all-notification",
+//   authMiddleware,
+//   getAllNotificationController
+// );
+// //Notifiaction  Doctor || POST
+// router.post(
+//   "/delete-all-notification",
+//   authMiddleware,
+//   deleteAllNotificationController
+// );
 
+// //GET ALL DOC
+// router.get("/getAllDoctors", authMiddleware, getAllDocotrsController);
 
+// //BOOK APPOINTMENT
+// router.post("/book-appointment", authMiddleware, bookeAppointmnetController);
 
-//APply Doctor || POST
-router.post("/apply-doctor", authMiddleware, applyDoctorController);
+// //Booking Avliability
+// router.post(
+//   "/booking-availbility",
+//   authMiddleware,
+//   bookingAvailabilityController
+// );
 
-//Notifiaction  Doctor || POST
-router.post(
-  "/get-all-notification",
-  authMiddleware,
-  getAllNotificationController
-);
-//Notifiaction  Doctor || POST
-router.post(
-  "/delete-all-notification",
-  authMiddleware,
-  deleteAllNotificationController
-);
-
-//GET ALL DOC
-router.get("/getAllDoctors", authMiddleware, getAllDocotrsController);
-
-//BOOK APPOINTMENT
-router.post("/book-appointment", authMiddleware, bookeAppointmnetController);
-
-//Booking Avliability
-router.post(
-  "/booking-availbility",
-  authMiddleware,
-  bookingAvailabilityController
-);
-
-//Appointments List
-router.get("/user-appointments", authMiddleware, userAppointmentsController);
+// //Appointments List
+// router.get("/user-appointments", authMiddleware, userAppointmentsController);
 
 export default router;

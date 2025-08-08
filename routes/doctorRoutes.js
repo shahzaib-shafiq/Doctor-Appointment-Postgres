@@ -5,11 +5,16 @@ import  {
   getDoctorByIdController,
   doctorAppointmentsController,
   updateStatusController,
+  createDoctorController
 } from "../controllers/doctorCtrl.js";
 import authMiddleware from "../middlewares/authMiddleware.js";
 const router = express.Router();
 
 //POST SINGLE DOC INFO
+
+
+router.post("/createDoctor", authMiddleware, createDoctorController);
+
 router.post("/getDoctorInfo", authMiddleware, getDoctorInfoController);
 
 //POST UPDATE PROFILE

@@ -28,7 +28,7 @@ const Patient = sequelize.define('Patient', {
         type: DataTypes.STRING,
 
     },
-    adress: {
+    address: {
         type: DataTypes.STRING
     }
 }, {

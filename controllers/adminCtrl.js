@@ -1,6 +1,6 @@
 import doctorModel from "../models/doctorModel.js";
 import userModel from "../models/userModels.js";
-
+import Department from "../models/departmentModel.js";
 
 const getAllUsersController = async (req, res) => {
   try {

@@ -1,8 +1,7 @@
-// const appointmentModel = require("../models/appointmentModel");
-// const doctorModel = require("../models/doctorModel");
+
 import appointmentModel from "../models/appointmentModel.js";
-import doctorModel from "../models/doctorModel.js";
-import userModel from '../models/userModels.js'
+import Doctor from "../models/doctorModel.js";
+import User from '../models/userModels.js'
 const getDoctorInfoController = async (req, res) => {
   try {
     const doctor = await doctorModel.findOne({ userId: req.body.userId });
@@ -112,7 +111,27 @@ const updateStatusController = async (req, res) => {
   }
 };
 
+const createDoctorController = async (req, res) => {
+  try {
+    const { specialization,experience,fee,license } = req.body;
+ 
+    const doctor=await Doctor.create({specialization,experience,fee,license})
+    res.status(200).send({
+      success: true,
+      message: "Doctor Created",
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      error,
+      message: "Error In Creating Doctor",
+    });
+  }
+};
+
 export {
+  createDoctorController,
   getDoctorInfoController,
   updateProfileController,
   getDoctorByIdController,
