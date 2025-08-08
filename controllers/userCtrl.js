@@ -10,14 +10,14 @@ import { registerSchema } from "../Validators/UserValidator.js";
 
 const registerController = async (req, res) => {
   try { 
-    const {firstName,lastName,email,password,role,isAdmin, isDoctor}=req.body
-    const { error } = registerSchema.validate(req.body);
-    if (error) {
-      return res.status(400).send({
-        success: false,
-        message: error.details[0].message,
-      });
-    }
+    const {firstName,lastName,email,password,phone,role,}=req.body
+    // const { error } = registerSchema.validate(req.body);
+    // if (error) {
+    //   return res.status(400).send({
+    //     success: false,
+    //     message: error.details[0].message,
+    //   });
+    // }
     const exisitingUser = await User.findOne({ where: { email: email } });//await User.findOne({ email: req.body.email });
     if (exisitingUser) {
       return res
@@ -27,7 +27,7 @@ const registerController = async (req, res) => {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
     // password = hashedPassword;
-    const new_user = await User.create({ firstName,lastName,email,password:hashedPassword,role,isAdmin,isDoctor });
+    const new_user = await User.create({ firstName,lastName,email,password:hashedPassword,phone,role });
     new_user.password=null;
     res.status(201).send({ message: "Register Sucessfully", success: true,user:new_user });
   } catch (error) {
