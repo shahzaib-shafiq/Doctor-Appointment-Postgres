@@ -92,27 +92,33 @@ const getSingleUserController = async (req, res) => {
     });
   }
 };
-const getAllUserController = async (req, res) => {
+const getAllUsersController = async (req, res) => {
   try {
     const users = await User.findAll();
-    if (users.length === 0) {
+
+    if (!users.length) {
       return res.status(200).send({
-        success: false,
         message: "No users found",
-        data: [],
+        success: false,
       });
     }
 
+    const usersWithoutPasswords = users.map(user => {
+      const userObj = user.toJSON();
+      delete userObj.password;
+      return userObj;
+    });
+
     res.status(200).send({
       success: true,
-      message: "Users fetched successfully",
-      data: users,
+      data: usersWithoutPasswords,
     });
   } catch (error) {
-    console.error("Error fetching users:", error.message);
+    console.log(error);
     res.status(500).send({
+      message: "Error fetching users",
       success: false,
-      message: "Server error while fetching users",
+      error,
     });
   }
 };
@@ -307,7 +313,7 @@ export {
   loginController,
   registerController,
   getSingleUserController,
-  getAllUserController,
+  getAllUsersController,
   applyDoctorController,
   getAllNotificationController,
   deleteAllNotificationController,

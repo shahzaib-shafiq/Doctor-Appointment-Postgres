@@ -5,7 +5,7 @@ import { v4 as uuidv4 } from 'uuid';
 const User = sequelize.define('User', {
   id: {
     type: DataTypes.UUID,
-    defaultValue: DataTypes.UUIDV4, // OR: () => uuidv4(),
+    defaultValue: DataTypes.UUIDV4,
     primaryKey: true,
   },
   firstName: {
@@ -28,33 +28,18 @@ const User = sequelize.define('User', {
     type: DataTypes.STRING,
     allowNull: false,
   },
+  phone: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
   role: {
     type: DataTypes.ENUM('patient', 'doctor', 'admin'),
     defaultValue: 'admin',
   },
-  isAdmin: {
-    type: DataTypes.BOOLEAN,
-    defaultValue: false,
-  },
-  isDoctor: {
-    type: DataTypes.BOOLEAN,
-    defaultValue: false,
-  },
-  notification: {
-    type: DataTypes.JSONB,
-    defaultValue: [],
-  },
-  seennotification: {
-    type: DataTypes.JSONB,
-    defaultValue: [],
-  },
 }, {
-  timestamps: true, // adds createdAt and updatedAt
-  tableName: 'users', // explicit table name
+  timestamps: true, 
+  tableName: 'users',
 });
 
 export default User;
 
-// const userModel = mongoose.model("users", userSchema);
-
-// export default userModel;

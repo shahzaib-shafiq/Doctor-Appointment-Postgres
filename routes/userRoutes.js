@@ -3,7 +3,7 @@ import {
   loginController,
   registerController,
   getSingleUserController,
-  getAllUserController,
+  getAllUsersController,
   applyDoctorController,
   getAllNotificationController,
   deleteAllNotificationController,
@@ -30,7 +30,7 @@ router.get("/:id",authMiddleware,getSingleUserController);
 
 //GET SINGLE USER ||GET
 
-router.get("/getUser",authMiddleware,getAllUserController);
+router.get("/getAllUser",authMiddleware,getAllUsersController);
 
 
 

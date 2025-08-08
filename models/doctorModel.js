@@ -1,57 +1,49 @@
-import mongoose from "mongoose";
+import { Sequelize, DataTypes } from 'sequelize';
+import { sequelize } from '../config/db.js';
+import { v4 as uuidv4 } from 'uuid';
 
-
-const doctorSchema = new mongoose.Schema(
-  {
-    userId: {
-      type: String,
-    },
-    firstName: {
-      type: String,
-      required: [true, "first name is required"],
-    },
-    lastName: {
-      type: String,
-      required: [true, "last name is required"],
-    },
-    phone: {
-      type: String,
-      required: [true, "phone no is required"],
-    },
-    email: {
-      type: String,
-      required: [true, "email is required"],
-    },
-    website: {
-      type: String,
-    },
-    address: {
-      type: String,
-      required: [true, "address is required"],
-    },
-    specialization: {
-      type: String,
-      required: [true, "specialization is require"],
-    },
-    experience: {
-      type: String,
-      required: [true, "experience is required"],
-    },
-    feesPerCunsaltation: {
-      type: Number,
-      required: [true, "fee is required"],
-    },
-    status: {
-      type: String,
-      default: "pending",
-    },
-    timings: {
-      type: Object,
-      required: [true, "wrok timing is required"],
+const Doctor = sequelize.define('Doctor', {
+  id: {
+    type: DataTypes.UUID,
+    defaultValue: DataTypes.UUIDV4,
+    primaryKey: true,
+  },
+  userId: {
+    type: DataTypes.UUID,
+    allowNull: false,
+    references: {
+      model: 'users',
+      key: 'id',
     },
   },
-  { timestamps: true }
-);
-
-const doctorModel = mongoose.model("doctors", doctorSchema);
-export default doctorModel;
+  departmentId: {
+    type: DataTypes.UUID,
+    defaultValue: DataTypes.UUIDV4,
+    allowNull: false,
+    references: {
+      model: 'departments',
+      key: 'id',
+    },
+  },
+  specialization: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  experience: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+  },
+  fee: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+  },
+  license: {
+    type: DataTypes.STRING,
+    unique: true,
+    allowNull: false,
+  },
+}, {
+  timestamps: true,
+  tableName: 'doctors',
+})
+export default Doctor;
