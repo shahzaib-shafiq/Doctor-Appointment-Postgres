@@ -1,6 +1,8 @@
-import mongoose from "mongoose";
-const appointmentSchema = new mongoose.Schema(
-  {
+import { Sequelize, DataTypes } from 'sequelize';
+import { sequelize } from '../config/db.js';
+import { v4 as uuidv4 } from 'uuid';
+const Appointment =sequelize.define('appointment',{
+
     userId: {
       type: String,
       required: true,
@@ -31,9 +33,25 @@ const appointmentSchema = new mongoose.Schema(
       required: true,
     },
   },
-  { timestamps: true }
+  { timestamps: true,
+    tableName: 'appointments', }
 );
 
-const appointmentModel = mongoose.model("appointments", appointmentSchema);
 
-export default appointmentModel;
+// Appointment.sync();
+
+// //Sync the model with the database, checking if the table already exists
+// Appointment.sync({ alter: true }) // you can use force true instead of alter to drop the table and create new
+//   .then((result) => {
+//     if (result.changed) {
+//       console.log("Appointment table updated successfully.");
+//     } else {
+//       console.log("Appointment table already exists and is up to date.");
+//     }
+//   })
+//   .catch((err) => {
+//     console.error("Error synchronizing Appointment table:", err);
+//   });
+
+
+export default Appointment;
