@@ -6,8 +6,7 @@ import colors from 'colors';
 import connectDb from './config/db.js';
 import userRoutes from './routes/userRoutes.js';
 import departmentRoutes from './routes/departmentRoutes.js'
-
-// import testRoutes from './routes/testRoutes.js';
+import doctorRoutes from './routes/doctorRoutes.js'
 dotenv.config(); // Ensure environment variables are loaded
 connectDb(); // Connect to MongoDB
 // syncDb();
@@ -18,11 +17,11 @@ app.use(cors());
 app.use(express.json());
 app.use(morgan('dev'));
 
-//app.use('/api/v1/test', testRoutes);
+//Routes
 app.use('/api/v1/user', userRoutes);
-// app.use('/api/v1/admin', adminRoutes);
-// app.use('/api/v1/doctor', doctorRoutes);
 app.use('/api/v1/department', departmentRoutes);
+app.use('/api/v1/doctor', doctorRoutes);
+
 
 
 

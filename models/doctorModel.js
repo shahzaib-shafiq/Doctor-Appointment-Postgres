@@ -46,19 +46,19 @@ const Doctor = sequelize.define('doctor', {
   timestamps: true,
   tableName: 'doctors',
 })
-// Doctor.sync();
+Doctor.sync();
 
-// //Sync the model with the database, checking if the table already exists
-// Doctor.sync({ alter: true }) // you can use force true instead of alter to drop the table and create new
-//   .then((result) => {
-//     if (result.changed) {
-//       console.log("Doctor table updated successfully.");
-//     } else {
-//       console.log("Doctor table already exists and is up to date.");
-//     }
-//   })
-//   .catch((err) => {
-//     console.error("Error synchronizing Doctor table:", err);
-//   });
+//Sync the model with the database, checking if the table already exists
+Doctor.sync({ alter: true }) // you can use force true instead of alter to drop the table and create new
+  .then((result) => {
+    if (result.changed) {
+      console.log("Doctor table updated successfully.");
+    } else {
+      console.log("Doctor table already exists and is up to date.");
+    }
+  })
+  .catch((err) => {
+    console.error("Error synchronizing Doctor table:", err);
+  });
 
 export default Doctor;
